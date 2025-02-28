@@ -13,9 +13,9 @@ require([
     "esri/widgets/Search",
     "esri/widgets/BasemapGallery",
     "esri/widgets/Expand",
-    "esri/widgets/Editor"
+    "esri/layers/FeatureLayer"
 
-  ], function(esriConfig, Map, MapView, Locate, Search, BasemapGallery, Expand, Editor) {
+  ], function(esriConfig, Map, MapView, Locate, Search, BasemapGallery, Expand, FeatureLayer) {
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurFOkIusOF1VpY7XrI8On8rT97tNiNbtgFmCtwOvhjfFhOLXkYP94N4hIcMdSHeUciUtB2IWQ_2YVJSdXzi_IWhmWdynaqt-VAFxx-m7QPXP1DZmxEPt6TyPJFH2W9SBFrsQHr3ANSUDx_agoBAH_kBJgf2rPafNi3Gymbl1Y9ob936ZFAViwcKE2ho6AMyipqnfeD2Q6xy6isdIWOpV36ZvShZri_FF0fkzhr7ztkfsZAT1_bPmqfOUP";   
 
       //Set up Map and Mapview
@@ -69,7 +69,12 @@ require([
         position: "top-left"
       });
 
-
+      // Create featurelayer from feature service 
+      const layer = new FeatureLayer({ 
+        // URL to the service 
+        url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_2fd3abfee008406399dd31d9f4a9a07e_results/FeatureServer"
+      });
+      map.add(layer);
 
 
     }
