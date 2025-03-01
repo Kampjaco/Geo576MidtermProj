@@ -72,7 +72,13 @@ require([
       // Create featurelayer from feature service 
       const layer = new FeatureLayer({ 
         // URL to the service 
-        url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_2fd3abfee008406399dd31d9f4a9a07e_results/FeatureServer"
+        url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_2fd3abfee008406399dd31d9f4a9a07e_results/FeatureServer",
+        outFields: ["*"],
+        popupTemplate: {
+          title: "{Trip Name} - {Attraction Name}",
+          content: `
+            <b>User: </b> {Date Visited}`
+        }
       });
       map.add(layer);
 
