@@ -13,9 +13,12 @@ require([
     "esri/widgets/Search",
     "esri/widgets/BasemapGallery",
     "esri/widgets/Expand",
-    "esri/layers/FeatureLayer"
+    "esri/layers/FeatureLayer",
+    "esri/renderers/UniqueValueRenderer",
+    "esri/symbols/SimpleMarkerSymbol",
+    "esri/rest/support/Query"
 
-  ], function(esriConfig, Map, MapView, Locate, Search, BasemapGallery, Expand, FeatureLayer) {
+  ], function(esriConfig, Map, MapView, Locate, Search, BasemapGallery, Expand, FeatureLayer, UniqueValueRenderer, SimpleMarkerSymbol, Query) {
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurFOkIusOF1VpY7XrI8On8rT97tNiNbtgFmCtwOvhjfFhOLXkYP94N4hIcMdSHeUciUtB2IWQ_2YVJSdXzi_IWhmWdynaqt-VAFxx-m7QPXP1DZmxEPt6TyPJFH2W9SBFrsQHr3ANSUDx_agoBAH_kBJgf2rPafNi3Gymbl1Y9ob936ZFAViwcKE2ho6AMyipqnfeD2Q6xy6isdIWOpV36ZvShZri_FF0fkzhr7ztkfsZAT1_bPmqfOUP";   
 
       //Set up Map and Mapview
@@ -69,6 +72,7 @@ require([
         position: "top-left"
       });
 
+
       // Create featurelayer from feature service 
       const layer = new FeatureLayer({ 
         // URL to the service 
@@ -77,7 +81,11 @@ require([
         popupTemplate: {
           title: "{Trip Name} - {Attraction Name}",
           content: `
-            <b>User: </b> {Date Visited}`
+            <b>User: </b> {_user} <br>
+            <b>Date Visited: </b> {Date Visited} <br>
+            <b>Description: </b> {Description} <br>
+            {IMG_4222.jpg}
+            `
         }
       });
       map.add(layer);
