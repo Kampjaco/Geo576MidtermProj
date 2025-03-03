@@ -38,39 +38,49 @@ require([
 
 
 
-      //Set up BasemapGallery and button
-      let basemapGallery = new BasemapGallery({
+      //Set up BasemapGallery 
+      const basemapGallery = new BasemapGallery({
         view: view
       });
 
-      const basemapGalleryExpand = new Expand({
-        expandIcon: "layer-basemap",
+      //Button to hold basemaps from BasemapGallery
+      const basemapExpand = new Expand({
         view: view,
         content: basemapGallery
       });
-      view.ui.add(basemapGalleryExpand, {
-        position: "top-right"
-      });
-
-
 
       //Set up Locate button
       const locateBtn = new Locate({
         view: view
       });
-      view.ui.add(locateBtn, {
-        position: "top-left"
-      });
-
-
        
       //Set up Search bar
       const searchWidget = new Search({
         view: view
       });
-      view.ui.add(searchWidget, {
-        position: "top-left"
+
+      //Div to hold Locate Me, Search, and BasemapExpand
+      const toolsDiv = document.createElement("div");
+      toolsDiv.classList.add("esri-widget");
+      toolsDiv.style.padding = "10px";
+
+      // Add widgets properly using view.ui.add()
+      view.ui.add(locateBtn);
+      view.ui.add(searchWidget);
+      view.ui.add(basemapExpand);
+
+      //Add widgets to container
+      toolsDiv.appendChild(locateBtn.container);
+      toolsDiv.appendChild(searchWidget.container);
+      toolsDiv.appendChild(basemapExpand.container);
+
+      //Create Expand widget to hold tools
+      const expandWidget = new Expand({
+        view: view,
+        content: toolsDiv,
+        expandIcon: "layers"
       });
+      view.ui.add(expandWidget, "bottom-left");
 
 
       // Create featurelayer from feature service 
