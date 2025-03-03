@@ -60,7 +60,7 @@ html, body {
 /* Media query for smaller screens */
 @media (max-width: 768px) {
   .title-control-container {
-      width: 95%;
+      width: 55%;
       font-size: 16px;
       padding: 6px;
   }

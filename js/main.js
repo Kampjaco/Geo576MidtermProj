@@ -80,7 +80,7 @@ require([
         content: toolsDiv,
         expandIcon: "layers"
       });
-      view.ui.add(expandWidget, "bottom-left");
+      view.ui.add(expandWidget, "top-left");
 
 
       // Create featurelayer from feature service 
