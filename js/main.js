@@ -97,6 +97,10 @@ require([
       //Has popups not be docked for mobile use
       view.popup.dockEnabled = false;
       view.popup.collapseEnabled = false;
+      view.popup.dockOptions = {
+        buttonEnabled: false, // Hide dock button
+        breakpoint: false // Prevent auto-docking behavior on mobile
+      };
 
 
     }
