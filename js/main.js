@@ -107,8 +107,6 @@ function getPopupContent(feature) {
   const attributes = feature.graphic.attributes;
   const objectId = attributes.objectid;
   const featureLayer = feature.graphic.layer;
-
-  console.log(attributes)
   
   // Fetch attachments dynamically
   return featureLayer.queryAttachments({
@@ -128,7 +126,7 @@ function getPopupContent(feature) {
     } else {
       return `<p><b>Attraction:</b> ${attributes.attraction_name}</p>
         <p><b>Visited on:</b> ${attributes.date_visited}</p>
-        <p><b>Logged by:</b> ${attributes._user}</p>
+        <p><b>Logged by:</b> ${attributes.logged_by}</p>
         <p><b>Description:</b> ${attributes.description}</p>
         <p>No photo available.</p>`;
     }
