@@ -95,11 +95,13 @@ require([
       });
       map.add(layer);
       //Has popups not be docked for mobile use
-      view.popup.dockEnabled = false;
-      view.popup.collapseEnabled = false;
-      view.popup.dockOptions = {
-        buttonEnabled: false, // Hide dock button
-        breakpoint: false // Prevent auto-docking behavior on mobile
+      view.popup = {
+        dockEnabled: false,  // Ensures popup is always undocked
+        collapseEnabled: false, // Prevents collapsing
+        dockOptions: {
+          buttonEnabled: false, // Removes docking button
+          breakpoint: false // Prevents auto-docking on mobile
+        }
       };
 
 
