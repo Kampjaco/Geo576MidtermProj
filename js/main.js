@@ -28,9 +28,9 @@ require([
 
       const view = new MapView({
         map: map,
-        center: [-94.09564505572541, 43.65061390407357], // Longitude, latitude
-        zoom: 15, // Zoom level
-        container: "viewDiv", // Div element
+        center: [-91.24025122550655, 43.798184326703314],
+        zoom: 15, 
+        container: "viewDiv", 
         constraints: {
             rotationEnabled: false //Disables right click rotation
         }
@@ -70,9 +70,9 @@ require([
       view.ui.add(basemapExpand);
 
       //Add widgets to container
+      toolsDiv.appendChild(basemapExpand.container);
       toolsDiv.appendChild(locateBtn.container);
       toolsDiv.appendChild(searchWidget.container);
-      toolsDiv.appendChild(basemapExpand.container);
 
       //Create Expand widget to hold tools
       const expandWidget = new Expand({
@@ -89,17 +89,48 @@ require([
         url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_2fd3abfee008406399dd31d9f4a9a07e_results/FeatureServer",
         outFields: ["*"],
         popupTemplate: {
-          title: "{Trip Name} - {Attraction Name}",
-          content: `
-            <b>User: </b> {_user} <br>
-            <b>Date Visited: </b> {Date Visited} <br>
-            <b>Description: </b> {Description} <br>
-            {IMG_4222.jpg}
-            `
+          title: "{Trip Name}",
+          content: getPopupContent
         }
       });
       map.add(layer);
 
 
     }
+    
 );
+
+//Creates popup content from 
+function getPopupContent(feature) {
+  const attributes = feature.graphic.attributes;
+  const objectId = attributes.objectid;
+  const featureLayer = feature.graphic.layer;
+
+  console.log(attributes)
+  
+  // Fetch attachments dynamically
+  return featureLayer.queryAttachments({
+    objectIds: [objectId]
+  }).then(response => {
+    const attachments = response[objectId];
+    
+    if (attachments && attachments.length > 0) {
+      const imageUrl = attachments[0].url; // Get the first attached image
+      return `
+        <p><b>Attraction:</b> ${attributes.attraction_name}</p>
+        <p><b>Visited on:</b> ${attributes.date_visited}</p>
+        <p><b>Logged by:</b> ${attributes._user}</p>
+        <p><b>Description:</b> ${attributes.description}</p>
+        <img src="${imageUrl}" style="max-width: 100%; height: auto;"/>
+      `;
+    } else {
+      return `<p><b>Attraction:</b> ${attributes.attraction_name}</p>
+        <p><b>Visited on:</b> ${attributes.date_visited}</p>
+        <p><b>Logged by:</b> ${attributes._user}</p>
+        <p><b>Description:</b> ${attributes.description}</p>
+        <p>No photo available.</p>`;
+    }
+  });
+}
+
+
