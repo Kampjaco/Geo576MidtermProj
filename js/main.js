@@ -96,13 +96,14 @@ require([
       map.add(layer);
       //Has popups not be docked for mobile use
       view.popup.dockEnabled = false;
+      view.popup.collapseEnabled = false;
 
 
     }
     
 );
 
-//Creates popup content from 
+//Creates popup content
 function getPopupContent(feature) {
   const attributes = feature.graphic.attributes;
   const objectId = attributes.objectid;
