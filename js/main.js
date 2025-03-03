@@ -94,6 +94,8 @@ require([
         }
       });
       map.add(layer);
+      //Has popups not be docked for mobile use
+      view.popup.dockEnabled = false;
 
 
     }
@@ -119,7 +121,7 @@ function getPopupContent(feature) {
       return `
         <p><b>Attraction:</b> ${attributes.attraction_name}</p>
         <p><b>Visited on:</b> ${attributes.date_visited}</p>
-        <p><b>Logged by:</b> ${attributes._user}</p>
+        <p><b>Logged by:</b> ${attributes.logged_by}</p>
         <p><b>Description:</b> ${attributes.description}</p>
         <img src="${imageUrl}" style="max-width: 100%; height: auto;"/>
       `;
