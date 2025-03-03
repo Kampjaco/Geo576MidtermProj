@@ -46,7 +46,7 @@ require([
       //Button to hold basemaps from BasemapGallery
       const basemapExpand = new Expand({
         view: view,
-        content: basemapGallery
+        content: basemapGallery,
       });
 
       //Set up Locate button
