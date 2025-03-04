@@ -82,6 +82,7 @@ require([
     const expandWidget = new Expand({
       view: view,
       content: toolsDiv,
+      group: "top-left",
       expandIcon: "layers"
     });
     view.ui.add(expandWidget, "top-left");
@@ -108,21 +109,62 @@ require([
       }
     };
 
-    view.whenLayerView(layer).then((layerView) => {
-      const filterNodes = document.querySelectorAll(`.filter-field`);
-      const filterBtn = document.getElementById("filterBtn");
-      //Set up UI element
-      tripLayerView = layerView;
 
-      filterBtn.style.visibility = "visible";
-      const filterBtnExpand = new Expand({
-        view: view,
-        content: filterBtn,
-        expandIcon: "filter",
-      });
-      view.ui.add(filterBtnExpand, "top-left");
+    const optionNodes = document.querySelectorAll(`.options`);
+    const tripNode = document.getElementById("trip_nameBtn");
+    const yearNode = document.getElementById("date_visitedBtn");
+    const userNode = document.getElementById("logged_byBtn");
+    const filterElement = document.getElementById("parentFilterBtn");
+
+    //Div to hold Locate Me, Search, and BasemapExpand
+    const filtersDiv = document.createElement("div");
+    filtersDiv.classList.add("esri-widget");
+    filtersDiv.style.padding = "10px";
+
+    const yearExpand = new Expand({
+      view: view,
+      content: yearNode,
+      label: "Years",
+      group: "filters"
     });
 
+    const tripExpand = new Expand({
+      view: view,
+      content: tripNode,
+      label: "Years",
+      group: "filters"
+    });
+
+    const userExpand = new Expand({
+      view: view,
+      content: userNode,
+      label: "Years",
+      group: "filters"
+    });
+
+    view.ui.add(tripExpand);
+    view.ui.add(userExpand);
+    view.ui.add(yearExpand);
+
+    filtersDiv.appendChild(tripExpand.container);
+    filtersDiv.appendChild(userExpand.container);
+    filtersDiv.appendChild(yearExpand.container);
+
+    view.whenLayerView(layer).then((layerView) => {
+      tripLayerView = layerView;
+    
+      //Set up UI
+      filterElement.style.visibility = "visible";
+      const mainFilterExpand = new Expand({
+        view: view,
+        content: filtersDiv,
+        expandIcon: "filter",
+        collapseIcon: "filter",
+        group: "top-left"
+      });
+      view.ui.add(mainFilterExpand, "top-left");
+    });
+      
     //populateDropdowns(layer);
 
 
@@ -147,7 +189,7 @@ require([
         });
       });
     }
-
+    
     function applyFilters(layerView) {
       const trip = document.getElementById("trip_nameFilter").value;
       const loggedBy = document.getElementById("logged_byFilter").value;

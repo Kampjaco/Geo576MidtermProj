@@ -36,34 +36,33 @@ html, body {
   left: 0;
 }
 
-#filterBtn {
-  height: auto; 
+#mainFilterBtn{
+  height: 160px;
   width: 100%;
   visibility: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch; 
+  .esri-collapse_icon {
+    display: none;
+  }
 }
 
-.filter-field {
-  min-width: 150px; 
+.filterField {
+  width: 100%;
   padding: 12px;
   text-align: center;
   vertical-align: baseline;
   cursor: pointer;
   height: 40px;
-  width: 100%; 
-  box-sizing: border-box; 
-  white-space: nowrap; 
 }
 
-.filter-field:focus {
+.filterField:focus {
   background-color: dimgrey;
 }
 
-.filter-field:hover {
+.filterField:hover {
   background-color: dimgrey;
 }
+
+
 
 
 

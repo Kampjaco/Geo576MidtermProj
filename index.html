@@ -23,11 +23,14 @@
             <b>Trip Logging Application</b>
         </div>
         <a href="https://arcg.is/zXnfa0"target="_blank" class="addRecordBtn">Add Record</a>
-        <div id="filterBtn" class="esri-widget">
-            <div class="filter-field" data-season="Winter">Trip Name</div>
-            <div class="filter-field" data-season="Spring">Logged By</div>
-            <div class="filter-field" data-season="Summer">Year Visited</div>
-            <div class="filter-field" data-season="Fall">Reset filters</div>
+        <div id="parentFilterBtn" class="esri-widget">
+            <div class="filterField esri-widget" id="trip_nameBtn">Trip</div>
+                <div class="options esri-widget" id="trip_nameOption">Trip 1</div>        
+            <div class="filterField esri-widget" id="logged_byBtn">Logged</div>
+                <div class="options esri-widget" id="logged_byOption">User 1</div>
+            <div class="filterField esri-widget" id="date_visitedBtn">Date</div>
+                <div class="options esri-widget" id="date_visitedOption">Date 1</div>
+            <div class = "esri-widget" id="resetBtn"></div>
         </div>
         <div id ="viewDiv"></div>
 
@@ -36,3 +39,8 @@
         
     </body>
 </html>
+
+
+<!--
+
+-->
