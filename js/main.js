@@ -116,7 +116,7 @@ require([
     const userNode = document.getElementById("logged_byBtn");
     const filterElement = document.getElementById("parentFilterBtn");
 
-    //Div to hold Locate Me, Search, and BasemapExpand
+    //Div to hold Expand for each filter
     const filtersDiv = document.createElement("div");
     filtersDiv.classList.add("esri-widget");
     filtersDiv.style.padding = "10px";
@@ -124,21 +124,24 @@ require([
     const yearExpand = new Expand({
       view: view,
       content: yearNode,
-      label: "Years",
+      expandIcon: "calendar",
+      collapseIcon: "calendar",
       group: "filters"
     });
 
     const tripExpand = new Expand({
       view: view,
       content: tripNode,
-      label: "Years",
+      expandIcon: "car",
+      collapseIcon: "car",
       group: "filters"
     });
 
     const userExpand = new Expand({
       view: view,
       content: userNode,
-      label: "Years",
+      expandIcon: "user",
+      collapseIcon: "user",
       group: "filters"
     });
 
