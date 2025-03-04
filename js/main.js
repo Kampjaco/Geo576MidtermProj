@@ -25,6 +25,11 @@ require([
 
     let tripLayerView;
 
+  //----------------------------------------------------------------------------------------------
+  /**
+   * Setting up basic map elements and widgets
+   */
+
     //Set up Map and Mapview
     const map = new Map({
       basemap: "osm"
@@ -39,8 +44,6 @@ require([
           rotationEnabled: false //Disables right click rotation
       }
     });
-
-
 
     //Set up BasemapGallery 
     const basemapGallery = new BasemapGallery({
@@ -109,8 +112,12 @@ require([
       }
     };
 
+//----------------------------------------------------------------------------------------------
+/**
+ * Here begins setting up filters for the FeatureLayer data
+ */
 
-    const optionNodes = document.querySelectorAll(`.options`);
+    //Divs for each attribute to be filtered by
     const tripNode = document.getElementById("trip_nameBtn");
     const yearNode = document.getElementById("date_visitedBtn");
     const userNode = document.getElementById("logged_byBtn");
@@ -121,6 +128,7 @@ require([
     filtersDiv.classList.add("esri-widget");
     filtersDiv.style.padding = "10px";
 
+    //Will become Year filter
     const yearExpand = new Expand({
       view: view,
       content: yearNode,
@@ -129,6 +137,7 @@ require([
       group: "filters"
     });
 
+    //Will become Trip filter
     const tripExpand = new Expand({
       view: view,
       content: tripNode,
@@ -137,6 +146,7 @@ require([
       group: "filters"
     });
 
+    //Will become User filter
     const userExpand = new Expand({
       view: view,
       content: userNode,
@@ -145,6 +155,7 @@ require([
       group: "filters"
     });
 
+    //Add filters to filter div
     view.ui.add(tripExpand);
     view.ui.add(userExpand);
     view.ui.add(yearExpand);
@@ -168,52 +179,101 @@ require([
       view.ui.add(mainFilterExpand, "top-left");
     });
       
-    //populateDropdowns(layer);
+    populateDropdowns(layer);
 
-
-    //Populate dropdowns with distinct values from trip_name, logged_by, and year from date_visited
+    //Put distinct values in the appropriate filter categories
     function populateDropdowns(layer) {
-      const fields = ["trip_name", "logged_by", "date_visited"];
-      fields.forEach(field => {
+      const fieldMappings = {
+        "trip_name": "trip_nameBtn",
+        "logged_by": "logged_byBtn",
+        "date_visited": "date_visitedBtn"
+      };
+    
+      Object.keys(fieldMappings).forEach(field => {
         const query = layer.createQuery();
         query.returnDistinctValues = true;
-        query.outFields = [field];
+    
+        if (field === "date_visited") {
+          query.outFields = ["date_visited"];
+        } else {
+          query.outFields = [field];
+        }
+    
         layer.queryFeatures(query).then((result) => {
-          const select = document.getElementById(`${field}Filter`);
+          const container = document.getElementById(fieldMappings[field]);
+          container.innerHTML = ""; 
+    
+          const uniqueValues = new Set();
+    
           result.features.forEach(feature => {
-            const value = feature.attributes[field];
-            if(value) {
-              const option = document.createElement("option");
-              option.value = value;
-              option.textContent = value;
-              select.appendChild(option);
+            let value = feature.attributes[field];
+            if (value) {
+              if (field === "date_visited") {
+                value = value.split("/")[2]; // Extract only the year
+              }
+              uniqueValues.add(value);
             }
+          });
+    
+          // Sort values and add as clickable divs
+          Array.from(uniqueValues).sort().forEach(value => {
+            const optionDiv = document.createElement("div");
+            optionDiv.classList.add("optionItem", "esri-widget");
+            optionDiv.textContent = value;
+            optionDiv.dataset.value = value;
+            optionDiv.addEventListener("click", () => applyFilters()); // Attach event listener
+            container.appendChild(optionDiv);
           });
         });
       });
     }
+
+    function applyFilters() {
+      // Retrieve the values selected by the user
+      const tripNameFilter = document.querySelector("#trip_nameOption .optionItem.selected");
+      const userFilter = document.querySelector("#logged_byOption .optionItem.selected");
+      const dateFilter = document.querySelector("#date_visitedOption .optionItem.selected");
     
-    function applyFilters(layerView) {
-      const trip = document.getElementById("trip_nameFilter").value;
-      const loggedBy = document.getElementById("logged_byFilter").value;
-      const yearVisited = document.getElementById("date_visitedFilter").value;
-
-      let whereClause = [];
-      if(trip) {
-        whereClause.push(`trip_name = '${trip}'`);
+      // Build the filter query
+      const filters = [];
+    
+      if (tripNameFilter) {
+        filters.push(`"Trip Name" = '${tripNameFilter.dataset.value}'`);
       }
-      if(loggedBy) {
-        whereClause.push(`logged_by = '${logged_by}`);
+    
+      if (userFilter) {
+        filters.push(`"Logged By" = '${userFilter.dataset.value}'`);
       }
-      if(yearVisited) {
-        whereClause.push(`date_visited = '${yearVisited}`);
+    
+      if (dateFilter) {
+        filters.push(`"Date Visited" = '${dateFilter.dataset.value}'`);
       }
-
-      layerView.filter = {
-        where: whereClause.length ? whereClause.join(" AND ") : "" 
-      };
+    
+      // If no filters are selected, show all features
+      let whereClause = filters.join(" AND ");
+      if (whereClause === "") {
+        whereClause = "1=1";  // This ensures all data is shown when no filters are selected
+      }
+    
+      // Apply the filters to the layer's query
+      const query = layer.createQuery();
+      query.where = whereClause;
+      query.outFields = ["*"];
+    
+      // Execute the query to update the map
+      layer.queryFeatures(query).then((result) => {
+        tripLayerView.filter = {
+          where: whereClause,
+          //geometry: null, // No geometry filter
+          //spatialRelationship: "esriSpatialRelIntersects",
+        };
+      }).catch(error => {
+        console.error("Error applying filter: ", error);
+      });
     }
-
+    
+    
+  
   }
     
 );

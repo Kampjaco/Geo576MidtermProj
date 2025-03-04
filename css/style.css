@@ -45,7 +45,7 @@ html, body {
   }
 }
 
-.filterField {
+.filterField .optionItem{
   width: 100%;
   padding: 12px;
   text-align: center;
@@ -54,17 +54,21 @@ html, body {
   height: 40px;
 }
 
-.filterField:focus {
-  background-color: dimgrey;
+.filterField .optionItem:focus {
+  background-color: lightgrey;
 }
 
-.filterField:hover {
-  background-color: dimgrey;
+.filterField .optionItem:hover {
+  background-color: lightgrey;
 }
 
-
-
-
+.optionItem {
+  text-align: center;
+  white-space: nowrap;  
+  overflow: hidden;  
+  text-overflow: ellipsis;  
+  max-width: 100%;  
+}
 
 .addRecordBtn {
   position: absolute;
