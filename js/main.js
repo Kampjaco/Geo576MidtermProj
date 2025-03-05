@@ -14,13 +14,10 @@ require([
     "esri/widgets/BasemapGallery",
     "esri/widgets/Expand",
     "esri/layers/FeatureLayer",
-    "esri/renderers/UniqueValueRenderer",
-    "esri/symbols/SimpleMarkerSymbol",
-    "esri/rest/support/Query",
     "esri/views/layers/FeatureLayerView"
 
   ], 
-  function(esriConfig, Map, MapView, Locate, Search, BasemapGallery, Expand, FeatureLayer, UniqueValueRenderer, SimpleMarkerSymbol, Query, FeatureFilter) {
+  function(esriConfig, Map, MapView, Locate, Search, BasemapGallery, Expand, FeatureLayer, FeatureFilter) {
     esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurFOkIusOF1VpY7XrI8On8rT97tNiNbtgFmCtwOvhjfFhOLXkYP94N4hIcMdSHeUciUtB2IWQ_2YVJSdXzi_IWhmWdynaqt-VAFxx-m7QPXP1DZmxEPt6TyPJFH2W9SBFrsQHr3ANSUDx_agoBAH_kBJgf2rPafNi3Gymbl1Y9ob936ZFAViwcKE2ho6AMyipqnfeD2Q6xy6isdIWOpV36ZvShZri_FF0fkzhr7ztkfsZAT1_bPmqfOUP";   
 
     let tripLayerView;
@@ -86,7 +83,8 @@ require([
       view: view,
       content: toolsDiv,
       group: "top-left",
-      expandIcon: "layers"
+      expandIcon: "layers",
+      collapseIcon: "layers"
     });
     view.ui.add(expandWidget, "top-left");
 
