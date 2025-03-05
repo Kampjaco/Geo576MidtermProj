@@ -177,9 +177,11 @@ require([
         group: "top-left"
       });
       view.ui.add(mainFilterExpand, "top-left");
+
+      populateDropdowns(layer);
     });
       
-    populateDropdowns(layer);
+
 
     //Put distinct values in the appropriate filter categories
     function populateDropdowns(layer) {
@@ -198,9 +200,10 @@ require([
         } else {
           query.outFields = [field];
         }
-    
+        
         layer.queryFeatures(query).then((result) => {
           const container = document.getElementById(fieldMappings[field]);
+          console.log(fieldMappings[field]);
           container.innerHTML = ""; 
     
           const uniqueValues = new Set();
@@ -221,61 +224,95 @@ require([
             optionDiv.classList.add("optionItem", "esri-widget");
             optionDiv.textContent = value;
             optionDiv.dataset.value = value;
-            optionDiv.addEventListener("click", () => applyFilters()); // Attach event listener
             container.appendChild(optionDiv);
           });
         });
       });
     }
 
-    function applyFilters() {
-      // Retrieve the values selected by the user
-      const tripNameFilter = document.querySelector("#trip_nameOption .optionItem.selected");
-      const userFilter = document.querySelector("#logged_byOption .optionItem.selected");
-      const dateFilter = document.querySelector("#date_visitedOption .optionItem.selected");
-    
-      // Build the filter query
-      const filters = [];
-    
-      if (tripNameFilter) {
-        filters.push(`"Trip Name" = '${tripNameFilter.dataset.value}'`);
+    //Store selected values for each filter category
+    const selectedFilters = {
+      trip_name: null,
+      logged_by: null,
+      date_visited: null
+    };
+
+    //Event listeners
+    tripNode.addEventListener("click", filterAttribute);
+    userNode.addEventListener("click", filterAttribute);
+    yearNode.addEventListener("click", filterAttribute);
+
+    function filterAttribute(event) {
+      const fieldMappings = {
+        trip_nameBtn: "trip_name",
+        logged_byBtn: "logged_by",
+        date_visitedBtn: "date_visited"
+      };
+
+      const clickedElement = event.target;
+      //Identify which category was clicked
+      const parentId = clickedElement.parentElement.id;
+      const field = fieldMappings[parentId];
+
+      //If field is not recognized do nothing
+      if(!field) {
+        console.log(field);
+        return
       }
-    
-      if (userFilter) {
-        filters.push(`"Logged By" = '${userFilter.dataset.value}'`);
+
+      const selectedValue = clickedElement.getAttribute("data-value");
+
+      //Toggle selection - if already selected, deselect it
+      if(selectedFilters[field] === selectedValue) {
+        selectedFilters[field] = null
+        clickedElement.classList.remove("selectedFilter");
       }
-    
-      if (dateFilter) {
-        filters.push(`"Date Visited" = '${dateFilter.dataset.value}'`);
+      else {
+        //Update selected filter
+        selectedFilters[field] = selectedValue;
+
+        //Remove selected style from other options in same attribute category
+        clickedElement.parentElement.querySelectorAll(".optionItem").forEach(option => {
+          option.classList.remove("selectedFilter");
+        });
+        clickedElement.classList.add("selectedFilter");
       }
-    
-      // If no filters are selected, show all features
-      let whereClause = filters.join(" AND ");
-      if (whereClause === "") {
-        whereClause = "1=1";  // This ensures all data is shown when no filters are selected
-      }
-    
-      // Apply the filters to the layer's query
-      const query = layer.createQuery();
-      query.where = whereClause;
-      query.outFields = ["*"];
-    
-      // Execute the query to update the map
-      layer.queryFeatures(query).then((result) => {
-        tripLayerView.filter = {
-          where: whereClause,
-          //geometry: null, // No geometry filter
-          //spatialRelationship: "esriSpatialRelIntersects",
-        };
-      }).catch(error => {
-        console.error("Error applying filter: ", error);
-      });
+
+
+
+      //Apply filter to map layer
+      applyFilters();
     }
-    
-    
-  
-  }
-    
+
+    function applyFilters() {
+      let whereClauses = [];
+
+      //Build SQL queries for each filter
+      Object.keys(selectedFilters).forEach(field => {
+        const value = selectedFilters[field];
+        if(value) {
+          if(field === "date_visited") {
+            //Checks if year is in date given by user (is in mm/dd/yyyy) not yyyy
+            console.log(field);
+            console.log(typeof(value));
+            whereClauses.push(`${field} LIKE '%${value}%'`);
+          } 
+          else {
+            whereClauses.push(`${field} = '${value}'`);
+          }
+
+        }
+      });
+
+      const whereClause = whereClauses.length > 0 ? whereClauses.join(" AND ") : "1=1";
+
+      //Apply filter
+      tripLayerView.filter = {
+        where: whereClause
+      };
+      console.log(tripLayerView.filter.where);
+    }
+  }  
 );
 
 //Creates popup content

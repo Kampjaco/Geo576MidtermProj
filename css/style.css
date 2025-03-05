@@ -63,11 +63,17 @@ html, body {
 }
 
 .optionItem {
+  font-weight: normal;
   text-align: center;
   white-space: nowrap;  
   overflow: hidden;  
   text-overflow: ellipsis;  
   max-width: 100%;  
+}
+
+.selectedFilter {
+  color: white;
+  font-weight: bold;
 }
 
 .addRecordBtn {
