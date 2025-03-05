@@ -34,8 +34,8 @@ require([
 
     const view = new MapView({
       map: map,
-      center: [-91.24025122550655, 43.798184326703314],
-      zoom: 15, 
+      center: [-99.68765682013866, 40.67835956302722],
+      zoom: 5, 
       container: "viewDiv", 
       constraints: {
           rotationEnabled: false //Disables right click rotation
